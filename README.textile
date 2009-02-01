@@ -6,6 +6,7 @@ Passwords are passed to the console in the scripts. This may be a security risk 
 
 
 h2. Environment
+
 * Ubuntu 8.04
 * Apache with passenger
 
@@ -46,4 +47,5 @@ This will overwrite any existing configuration files.
 
 
 Created by masone (Christian Felder, http://www.masone.ch)
+
 LICENSE: MIT
