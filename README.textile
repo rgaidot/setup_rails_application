@@ -1,0 +1,49 @@
+h1. Setup Rails app
+
+This is a collection of scripts I use to setup my Rails applications for production. Please notice that it may be bound very tightly to my environment. It may or may not work for you as it does for me. It moreover bases on some conventions I use that may not suit your needs.
+
+Passwords are passed to the console in the scripts. This may be a security risk if you're not the only one that has access to the server.
+
+
+h2. Environment
+* Ubuntu 8.04
+* Apache with passenger
+
+
+h2. Instructions
+
+h3. Configuration
+
+Create a config.yml from config_sample.yml and specify all necessary settings.
+
+
+h3. Setup a Rails application on the production server
+
+Login to your server and run setup_server.rb
+
+What it does for you:
+* Creating a project directory under /var/www/project_name
+* Adding a user for the application and and setting permissions
+* Creating an apache configuration (passenger)
+* Creating a database and a user for the project
+
+Don't forget to restart apache after your first deployment
+
+h3. Prepare a Rails application for deployment
+
+Run setup_local.rb locally
+
+What it does for you:
+* Creating a capistrano config
+* Creating a maintenance.html file
+* Creating a .gitignore file with the most common cases 
+
+h3. Force
+
+You can use the --force operator to force all operations.
+This will overwrite any existing configuration files.
+
+
+
+Created by masone (Christian Felder, http://www.masone.ch)
+LICENSE: MIT

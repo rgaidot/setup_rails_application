@@ -1,0 +1,104 @@
+#############################################################
+# 	Application setup
+#############################################################
+
+set :application, "APPLICATION_NAME"
+set :deploy_to, "APPLICATION_ROOT"
+set :rails_env, "production" 
+
+#############################################################
+#	Settings
+#############################################################
+
+default_run_options[:pty] = true
+set :use_sudo, false
+set :keep_releases, 2
+
+#############################################################
+#	Servers
+#############################################################
+
+set :user, "APPLICATION_USER"
+set :domain, "APPLICATION_HOST"
+role :app, domain
+role :web, domain
+role :db, domain, :primary => true
+
+#############################################################
+#	Version Control
+#############################################################
+
+set :scm, 'git'
+set :repository,  "APPLICATION_REPOSITORY"
+set :checkout, "export"
+set :git_shallow_clone, 1
+set :ssh_options, {:forward_agent => true}
+
+#############################################################
+#	Passenger
+#############################################################
+
+desc "Restart Application"
+namespace :deploy do
+  task :restart, :roles => [:app, :web] do
+    run "touch #{current_path}/tmp/restart.txt"
+  end
+end
+
+#############################################################
+#	Thinking Sphinx
+#############################################################
+
+# namespace :sphinx do
+#   desc "Start Thinking Sphinx daemon"
+#   task :start do
+#     run "export RAILS_ENV=#{rails_env} && cd #{release_path} && rake ts:index && rake ultrasphinx:daemon:start"
+#   end
+#   desc "Stop Thinking Sphinx daemon"
+#   task :stop do
+#     run "export RAILS_ENV=#{rails_env} && cd #{release_path} && rake ultrasphinx:daemon:stop"
+#   end
+#   task :index do
+#     run "export RAILS_ENV=#{rails_env} && cd #{release_path} && rake ultrasphinx:index"
+#   end
+#   task :configure do
+#     run "export RAILS_ENV=#{rails_env} && cd #{release_path} && rake ultrasphinx:configure"
+#   end
+#   desc "Restart Thinking Sphinx daemon"
+#   task :restart do
+#     sphinx::stop
+#     sphinx::start
+#   end
+# end
+
+
+############################################################
+#   Server administration tasks
+############################################################
+
+desc "This will disable the application and show a warning screen"
+task :disable_web do
+  run "cp #{shared_path}/public/maintenance.html #{current_path}/public/maintenance.html"
+end
+
+desc "This will enable the application and remove the warning screen"
+task :enable_web do
+  run "rm #{current_path}/public/maintenance.html"
+end
+
+desc "Set up shared directories after setup of capistrano"
+task :after_setup, :roles => [:app, :web] do
+  # run "mkdir -p -m 775 #{shared_path}/public/pictures"
+end
+
+desc "Symlink the shared directories after every deploy"
+task :after_update_code, :roles => [:app, :web] do
+  run "cp #{current_release}/public/maintenance.html #{shared_path}/public/maintenance.html" # must be done before symlinking
+  
+  # run "ln -nfs #{shared_path}/public/pictures #{current_release}/public/pictures"
+end
+
+# after :deploy, "sphinx:index"
+# after :deploy, "sphinx:restart"
+# after "deploy:update_code", "sphinx:configure"
+after :deploy, "enable_web", "deploy:cleanup"

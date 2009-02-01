@@ -1,0 +1,22 @@
+<VirtualHost *:80>
+
+    ServerName APPLICATION_DOMAIN
+    ServerAlias www.APPLICATION_DOMAIN
+		DocumentRoot APPLICATION_ROOT/current/public
+
+    Options FollowSymlinks
+    RailsEnv production
+
+    CustomLog APPLICATION_ROOT/current/log/access combined
+    ErrorLog  APPLICATION_ROOT/current/log/error
+		ErrorDocument 404 APPLICATION_ROOT/current/public/404.html
+
+    RewriteEngine On
+
+    # Maintenance
+    RewriteCond %{REQUEST_URI} !\.(css|jpg|png|gif)$
+    RewriteCond %{DOCUMENT_ROOT}/maintenance.html -f
+    RewriteCond %{SCRIPT_FILENAME} !maintenance.html
+    RewriteRule ^.*$ /maintenance.html [L]
+
+</VirtualHost>

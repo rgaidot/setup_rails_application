@@ -1,0 +1,63 @@
+local:
+  
+  # Path to the application on the development machine
+  application_root: '/path/to/project'
+
+
+server:
+  
+  # Host or IP of the remote server the application should be deployed to
+  host: project.host.com
+  
+  # Name of the user that will be used to setup the application
+  user: user
+
+  # Webserver root directory
+  webserver_root: '/var/www'
+  
+  # Database access settings on remote server
+  database:
+    # Database user with root access
+    user: root
+    
+    # Database users password
+    password: database_password
+
+
+application:
+  
+  # The main domain of the application (without www)
+  domain: project.com
+  
+  # Application name
+  name: project
+  
+  # Desired application user
+  user: project
+  
+  # Desired application user password
+  password: application_password
+  
+  # Settings for the desired database
+  database: 
+    # Desired application database name
+    name: project_production
+  
+    # Desired application database user
+    user: project
+    
+    # Desired application database password
+    password: database_password
+    
+  # The git repository of the application to be deployed
+  repository: git@github.com:you/project.git
+  
+
+# Any task that will be executed can be disabled here
+tasks:
+  application: true
+  apache: true
+  database: true
+  publickey: true
+  capistrano: true
+  gitignore: true
