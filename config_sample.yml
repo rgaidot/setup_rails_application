@@ -9,9 +9,6 @@ server:
   # Host or IP of the remote server the application should be deployed to
   host: project.host.com
   
-  # Name of the user that will be used to setup the application
-  user: user
-
   # Webserver root directory
   webserver_root: '/var/www'
   
