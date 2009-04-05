@@ -88,12 +88,16 @@ end
 
 desc "Set up shared directories after setup of capistrano"
 task :after_setup, :roles => [:app, :web] do
+  run "mkdir -p -m 775 #{shared_path}/config"
+  run "mkdir -p -m 775 #{shared_path}/public"
+
   # run "mkdir -p -m 775 #{shared_path}/public/pictures"
 end
 
 desc "Symlink the shared directories after every deploy"
 task :after_update_code, :roles => [:app, :web] do
-  run "cp #{current_release}/public/maintenance.html #{shared_path}/public/maintenance.html" # must be done before symlinking
+	run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"    
+	run "cp #{current_release}/public/maintenance.html #{shared_path}/public/maintenance.html" # must be done before symlinking
   
   # run "ln -nfs #{shared_path}/public/pictures #{current_release}/public/pictures"
 end

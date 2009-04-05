@@ -16,14 +16,14 @@ class Server
   
   def setup
 
-    prepare_application       if @settings['tasks']['application'] == true
-    setup_apache_config       if @settings['tasks']['apache'] == true
-    setup_database            if @settings['tasks']['database'] == true
-    create_publickey          if @settings['tasks']['publickey'] == true
+    prepare_application       if @settings['tasks']['application']
+    setup_apache_config       if @settings['tasks']['apache']
+    setup_database            if @settings['tasks']['database']
+    create_publickey          if @settings['tasks']['publickey']
     
     puts "===== Finished setting up server."
 
-    if @settings['tasks']['apache'] == true
+    if @settings['tasks']['apache']
       puts "You can now deploy your application and then restart apache with" 
       puts "sudo a2ensite #{@settings['application']['name']}"
       puts "sudo /etc/init.d/apache2 reload"
@@ -39,11 +39,14 @@ class Server
     # Setting up project directory    
     if !File.exist?(@application_root) || force? || confirmation("overwrite #{@application_root}")
       run "sudo rm -rf #{@application_root}"
+    end
+    
+    if "`cat /etc/group | grep #{@settings['application']['user']}`".match(/#{@settings['application']['user']}:.*/) && (force? || confirmation("recreate #{@settings['application']['user']}"))
       run "sudo userdel #{@settings['application']['user']}"
     end
-    run "sudo mkdir #{@application_root}"
 
     # Setup a user for the application
+    run "sudo mkdir #{@application_root}"
     run "sudo useradd #{@settings['application']['user']} --home #{@application_root} --shell /bin/bash -p '#{@settings['application']['password'].crypt(Time.now.to_s)}'"
     run "sudo chown #{@settings['application']['user']}:#{@settings['application']['user']} #{@application_root}"
     run "sudo chmod 755 #{@application_root}"

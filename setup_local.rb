@@ -15,15 +15,15 @@ class Local
   def setup 
      
     if File.directory?(@settings['local']['application_root'])
-      create_capistrano_config  if @settings['tasks']['capistrano'] == true
-      create_gitignore          if @settings['tasks']['gitignore'] == true
+      create_capistrano_config  if @settings['tasks']['capistrano']
+      create_gitignore          if @settings['tasks']['gitignore']
     else
       abort("Directory #{@settings['local']['application_root']} could not be found.")
     end
 
     puts "===== Finished setting up application."
 
-    if @settings['tasks']['apache'] == true
+    if @settings['tasks']['apache']
       puts "Commit the changes, setup your server and then deploy your application with" 
       puts "cap deploy:setup"
       puts "cap deploy:migrations"

@@ -25,14 +25,14 @@ module SetupHelper
 
   def confirmation(message)
     puts "Do you really want to: #{message} (yes/no)"
-    gets.strip == 'yes' ? true : false
+    gets.strip == 'yes'
   end
   
   def check_force
     # Force all operations (this will overwrite and delete existing files)
-    @force = ARGV[0] == '--force' ? true : false
+    @force = ARGV[0] == '--force'
     ARGV.pop
-    if @force == true
+    if @force
       proceed = confirmation("force all operations (This will overwrite and delete existing files)")
       abort('Setup aborted by user') unless proceed
     end
@@ -40,7 +40,7 @@ module SetupHelper
   end
   
   def force?
-    @force == true
+    @force
   end
   
 end
